@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar UI</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+        }
+        table {
+            width: 55%;/*전체 화면에서 달력이 차지하는 비율설정*/
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: center;
+            width: 40px;
+            height: 40px;
+            padding: 10px;
+            position: relative;
+        }
+        th {
+            background-color: rgb(132, 116, 199);
+        }
+        .day-number {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 0.8em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <h2 id="month-year">2023 / November</h2>
+
+    <div>
+        <label for="year">Year:</label>
+        <input type="number" id="year" min="1900" max="2100" value="2023">
+        <label for="month">Month:</label>
+        <input type="number" id="month" min="1" max="12" value="11">
+        <button onclick="updateCalendar()">Update</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Sun</th>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+                <th>Sat</th>
+            </tr>
+        </thead>
+        <tbody id="calendar-body">
+            <!-- 달력과 year month update 사이에 내용이 들어갑니다. -->
+        </tbody>
+    </table>
+
+    <script>
+        function generateCalendar(year, month) {
+            let calendarBody = document.getElementById('calendar-body');
+            calendarBody.innerHTML = '';
+
+            let firstDay = new Date(year, month - 1, 1);
+            let lastDay = new Date(year, month, 0);
+            let daysInMonth = lastDay.getDate();
+            let startingDay = firstDay.getDay();
+
+            let currentDay = 1;
+
+            for (let i = 0; i < 6; i++) {
+                let row = document.createElement('tr');
+
+                for (let j = 0; j < 7; j++) {
+                    if (i === 0 && j < startingDay) {
+                        let cell = document.createElement('td');
+                        row.appendChild(cell);
+                    } else if (currentDay > daysInMonth) {
+                        break;
+                    } else {
+                        let cell = document.createElement('td');
+
+                        // 각 셀에 날짜를 표시
+                        let dayNumber = document.createElement('div');
+                        dayNumber.classList.add('day-number');
+                        dayNumber.textContent = currentDay;
+                        cell.appendChild(dayNumber);
+
+                        row.appendChild(cell);
+                        currentDay++;
+                    }
+                }
+
+                calendarBody.appendChild(row);
+
+                if (currentDay > daysInMonth) {
+                    break;
+                }
+            }
+        }
+
+        function updateCalendar() {
+            let yearInput = document.getElementById('year');
+            let monthInput = document.getElementById('month');
+            let monthYearHeader = document.getElementById('month-year');
+
+            let year = parseInt(yearInput.value);
+            let month = parseInt(monthInput.value);
+
+            generateCalendar(year, month);
+            
+            let monthNames = [
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            
+            monthYearHeader.textContent = `${year} / ${monthNames[month - 1]}`;
+        }
+
+        generateCalendar(2023, 11);
+    </script>
+
+</body>
+</html>
