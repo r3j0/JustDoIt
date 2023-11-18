@@ -1,5 +1,4 @@
-/* 달력 */
-
+// 달력
 function generateCalendar(year, month) {
     let calendarBody = document.getElementById('calendar-body');
     calendarBody.innerHTML = '';
@@ -51,21 +50,18 @@ function updateCalendar() {
     let month = parseInt(monthInput.value);
 
     generateCalendar(year, month);
-    
+
     let monthNames = [
         "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     ];
-    
+
     monthYearHeader.textContent = `${year} / ${monthNames[month - 1]}`;
 }
 
 generateCalendar(2023, 11);
 
-
-
-/* to do list */
-
+// To Do List
 let form = document.getElementById("form");
 let textInput = document.getElementById("textInput");
 let dateInput = document.getElementById("dateInput");
@@ -75,90 +71,122 @@ let tasks = document.getElementById("tasks");
 let add = document.getElementById("add");
 
 form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  formValidation();
+    e.preventDefault();
+    formValidation();
 });
 
 let formValidation = () => {
-  if (textInput.value === "") {
-    console.log("failure");
-    msg.innerHTML = "Task cannot be blank";
-  } else {
-    console.log("success");
-    msg.innerHTML = "";
-    acceptData();
-    add.setAttribute("data-bs-dismiss", "modal");
-    add.click();
+    if (textInput.value === "") {
+        console.log("failure");
+        if (msg) {
+            msg.innerHTML = "Task cannot be blank";
+        }
+    } else {
+        console.log("success");
+        if (msg) {
+            msg.innerHTML = "";
+        }
+        acceptData();
+        add.setAttribute("data-bs-dismiss", "modal");
+        add.click();
 
-    (() => {
-      add.setAttribute("data-bs-dismiss", "");
-    })();
-  }
+        (() => {
+            add.setAttribute("data-bs-dismiss", "");
+        })();
+    }
 };
 
 let data = [{}];
 
 let acceptData = () => {
-  data.push({
-    text: textInput.value,
-    date: dateInput.value,
-    description: textarea.value,
-  });
+    let hours = parseInt(document.getElementById('executionTimeHoursInput').value) || 0;
+    let minutes = parseInt(document.getElementById('executionTimeMinutesInput').value) || 0;
 
-  localStorage.setItem("data", JSON.stringify(data));
+    data.push({
+        text: textInput.value,
+        date: dateInput.value,
+        description: textarea.value,
+        priority: document.getElementById('priorityInput').value,
+        location: document.getElementById('locationInput').value,
+        executionTime: hours * 60 + minutes,
+    });
 
-  console.log(data);
-  createTasks();
+    localStorage.setItem("data", JSON.stringify(data));
+
+    console.log(data);
+    createTasks();
 };
 
 let createTasks = () => {
-  tasks.innerHTML = "";
-  data.map((x, y) => {
-    return (tasks.innerHTML += `
-    <div id=${y}>
-          <span class="fw-bold">${x.text}</span>
-          <span class="small text-secondary">${x.date}</span>
-          <p>${x.description}</p>
-  
-          <span class="options">
-            <i onClick= "editTask(this)" data-bs-toggle="modal" data-bs-target="#form" class="fas fa-edit"></i>
-            <i onClick ="deleteTask(this);createTasks()" class="fas fa-trash-alt"></i>
-          </span>
-        </div>
-    `);
-  });
+    tasks.innerHTML = "";
+    data.map((x, y) => {
+        let priorityColor;
+        switch (x.priority.toLowerCase()) {
+            case 'high':
+                priorityColor = 'text-danger'; // 빨간색
+                break;
+            case 'medium':
+                priorityColor = 'text-secondary'; // 회색
+                break;
+            case 'low':
+                priorityColor = 'text-primary'; // 파란색
+                break;
+            default:
+                priorityColor = '';
+        }
 
-  resetForm();
+        return (tasks.innerHTML += `
+            <div id=${y}>
+                <span class="fw-bold">${x.text}</span>
+                <span class="small text-secondary">${x.date}</span>
+                <p>${x.description}</p>
+                ${x.location ? `<span class="small text-secondary">Location: ${x.location}</span>` : ''}
+                <span class="small ${priorityColor}">Priority: ${x.priority}</span>
+                <span class="small text-secondary">Execution Time: ${Math.floor(x.executionTime / 60)}h ${x.executionTime % 60}min</span>
+                <span class="options">
+                    <i onClick= "editTask(this)" data-bs-toggle="modal" data-bs-target="#form" class="fas fa-edit"></i>
+                    <i onClick ="deleteTask(this);createTasks()" class="fas fa-trash-alt"></i>
+                </span>
+            </div>
+        `);
+    });
+
+    resetForm();
 };
 
+
 let deleteTask = (e) => {
-  e.parentElement.parentElement.remove();
-  data.splice(e.parentElement.parentElement.id, 1);
-  localStorage.setItem("data", JSON.stringify(data));
-  console.log(data);
-  
+    e.parentElement.parentElement.remove();
+    data.splice(e.parentElement.parentElement.id, 1);
+    localStorage.setItem("data", JSON.stringify(data));
+    console.log(data);
 };
 
 let editTask = (e) => {
-  let selectedTask = e.parentElement.parentElement;
+    let selectedTask = e.parentElement.parentElement;
 
-  textInput.value = selectedTask.children[0].innerHTML;
-  dateInput.value = selectedTask.children[1].innerHTML;
-  textarea.value = selectedTask.children[2].innerHTML;
+    textInput.value = selectedTask.children[0].innerHTML;
+    dateInput.value = selectedTask.children[1].innerHTML;
+    textarea.value = selectedTask.children[2].innerHTML;
+    document.getElementById('locationInput').value = selectedTask.children[3].textContent.split(": ")[1];
+    document.getElementById('priorityInput').value = selectedTask.children[4].textContent.split(": ")[1];
+    document.getElementById('executionTimeHoursInput').value = Math.floor(selectedTask.children[5].textContent.split(": ")[1] / 60);
+    document.getElementById('executionTimeMinutesInput').value = selectedTask.children[5].textContent.split(": ")[1] % 60;
 
-  deleteTask(e);
+    deleteTask(e);
 };
 
 let resetForm = () => {
-  textInput.value = "";
-  dateInput.value = "";
-  textarea.value = "";
+    textInput.value = "";
+    dateInput.value = "";
+    textarea.value = "";
+    locationInput.value = "";
 };
 
 (() => {
-  data = JSON.parse(localStorage.getItem("data")) || []
-  console.log(data);
-  createTasks();
+    data = JSON.parse(localStorage.getItem("data")) || []
+    console.log(data);
+    createTasks();
 })();
 
 
