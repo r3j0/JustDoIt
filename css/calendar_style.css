@@ -1,0 +1,138 @@
+#container-calendar {
+    flex-basis:70%; /* flex 반영하여 가로 길이 정하고 비율 수정 조금 했습니다. by 박정근 (2023.11.17) */
+}
+
+#date-update {
+    display:block;
+    float:right;
+    margin-right : 30px;
+}
+
+.monthButton {
+    width: 15px;
+    height: 15px;
+    border: 3px solid black;
+    border-width: 3px 3px 0 0;
+    margin: 10px;
+    cursor: pointer;
+    float: right;
+}
+
+.prevMonth { transform: rotate(-135deg); }
+.nextMonth { transform: rotate(45deg); }
+
+table {
+    width:100%; /*전체 화면에서 달력이 차지하는 비율설정*/
+    border-collapse: collapse;
+    margin-top: 20px;
+    table-layout: fixed;
+}
+
+th, td {
+    text-align: center;
+    position: relative;
+}
+
+td {
+    border: 1px solid #dddddd;
+    width: 100px;
+    height: 120px;
+    padding: 10px 10px 10px 30px;
+    vertical-align: top;
+}
+
+th {
+    /* background-color: rgb(132, 116, 199); */
+    border-bottom:1px;
+    border-color: #dddddd;
+    width: 40px;
+    height: 20px;
+    padding: 10px;
+}
+
+.day-number {
+    position:absolute;
+    top: 5px;
+    left: 5px;
+    font-size: 0.8em;
+}
+
+.today_mark {
+    border-radius:30%;
+    background-color: #000000;
+    color:white;
+}
+
+/* Task Bar */
+
+.day-taskbar {
+    
+    display:block;
+    width:100%; 
+    height:25px;
+    margin-top:2px;
+    text-align:left;
+    box-shadow: 0px 1px 2px #444;
+
+    font-family: 'Arial', sans-serif;
+    line-height:25px;
+    text-indent:5px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.day-taskbar:hover {
+    opacity:0.5; /* 투명도 조절 */
+    cursor:pointer; /* 마우스 올렸을 때 손모양 마우스 */
+    
+    transition: all 0.5s ease-out; /* 애니메이션 천천히 */ 
+}
+
+.taskbar-schedule {
+    border: 2px solid #42adf5;
+    background-color: #42adf5;
+}
+.taskbar-task {
+    border: 2px solid black;
+}
+.taskbar-taskdone {
+    text-decoration: line-through;
+    opacity:30%;
+    box-shadow: 0px 0px 0px !important;
+}
+.taskbar-taskskip {
+    color:red;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+#moreButton {
+    position: absolute;
+    bottom:0px;
+    left: 0px; 
+    width: 25px;
+    height:25px; 
+    cursor:pointer; 
+    z-index: 1;
+}
+#moreButton:before { 
+    position:absolute; 
+    top: 50%; 
+    left: 50%; 
+    width: 16px; 
+    height: 2px; 
+    margin: -1px 0 0 -8px; 
+    background: #4f4f4f; 
+    content: ''; 
+}
+#moreButton:after {
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    width: 2px; 
+    height: 16px; 
+    margin: -8px 0 0 -1px; 
+    background: #4f4f4f; 
+    content: ''; 
+}
