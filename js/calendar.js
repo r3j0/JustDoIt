@@ -5,9 +5,9 @@ function appendTaskBar(cell, currentDay) {
     let todayDate = '' + nowYear + '-' + nowMonth + '-' + (Math.floor(currentDay / 10) == 0 ? '0' : '') + today.getDate();
 
     // 전체 일정에서 날짜가 같으면 가져오기로 했는데, 최적화 여부 고민해봐야 할 것 같습니다. by 박정근
-    for (let ti = 0; ti < allData.length; ti++) {
-        if (currentDate == allData[ti].date) {
-            currentTask.push(allData[ti]);
+    for (let ti = 0; ti < CalendarData.length; ti++) {
+        if (currentDate == CalendarData[ti].date) {
+            currentTask.push(CalendarData[ti]);
         }
     }
 
@@ -147,38 +147,38 @@ var monthNames = [
 ];
 var bgNames = [ "red", "yellow", "green", "greenyellow", "blue", "aqua", "purple" ];
 
-var allData = [];
+var CalendarData = [];
 
 // Data Read in localStorage
-read_allData = JSON.parse(localStorage.getItem("allData"))
-if (read_allData) allData = read_allData;
+read_CalendarData = JSON.parse(localStorage.getItem("CalendarData"))
+if (read_CalendarData) CalendarData = read_CalendarData;
 
 // Test Data
-/* allData.push({ index: 1, text: 'Database HW1', date: '2023-11-29', type: 'Task', color_category: 0, description: 'Test 1',
-                        status: 0});
-allData.push({ index: 2, text: 'Lunch Meeting', date: '2023-11-29', type: 'Schedule', color_category: 0, description: 'Test 2',
-            });
-allData.push({ index: 3, text: 'Dinner Meeting', date: '2023-11-30', type: 'Schedule', color_category: 4, description: 'Test 3',
-            });
-allData.push({ index: 4, text: 'Lend books', date: '2023-11-30', type: 'Task', color_category: 2, description: 'Test 4',
-                        status: 0});
-allData.push({ index: 5, text: 'Wash dishes', date: '2023-11-01', type: 'Task', color_category: 5, description: 'Test 5', 
-                        status: 0});
-allData.push({ index: 6, text: 'Send Mail', date: '2023-11-21', type: 'Task', color_category: 6, description: 'Test 6', 
-                        status: 1});
-allData.push({ index: 7, text: 'Party', date: '2023-11-29', type: 'Schedule', color_category: 7, description: 'Test 7', 
-            });
-allData.push({ index: 8, text: 'Go Hospital', date: '2023-11-25', type: 'Schedule', color_category: 1, description: 'Test 8', 
-            });
-allData.push({ index: 9, text: 'Lunch Meeting2', date: '2023-11-29', type: 'Schedule', color_category: 0, description: 'Test 9',
-            });
-allData.push({ index: 10, text: 'Lunch Meeting3', date: '2023-11-29', type: 'Schedule', color_category: 0, description: 'Test 10',
-            }); */
+/* CalendarData.push({ index: 1, text: 'Database HW1', date: '2023-11-29', type: 'Task', color_category: 0, description: 'Test 1', location: 'Home',
+                        status: 0, deadline: '2023-11-30', priority: 'high', runningTime: 120});
+CalendarData.push({ index: 2, text: 'Lunch Meeting', date: '2023-11-29', type: 'Schedule', color_category: 0, description: 'Test 2', location: 'Cafe',
+                        startTime: '14:00', endTime: '16:00'});
+CalendarData.push({ index: 3, text: 'Dinner Meeting', date: '2023-11-30', type: 'Schedule', color_category: 4, description: 'Test 3', location: 'Restaurant',
+                        startTime: '18:00', endTime: '20:00'});
+CalendarData.push({ index: 4, text: 'Lend books', date: '2023-11-30', type: 'Task', color_category: 2, description: 'Test 4', location: 'Library',
+                        status: 0, deadline: '', priority: 'low', runningTime: 30});
+CalendarData.push({ index: 5, text: 'Wash dishes', date: '2023-11-01', type: 'Task', color_category: 5, description: 'Test 5', location: 'Home',
+                        status: 0, deadline: '', priority: 'low', runningTime: 20});
+CalendarData.push({ index: 6, text: 'Send Mail', date: '2023-11-21', type: 'Task', color_category: 6, description: 'Test 6', location: 'Home',
+                        status: 1, deadline: '2023-11-25', priority: 'medium', runningTime: 60});
+CalendarData.push({ index: 7, text: 'Party', date: '2023-11-29', type: 'Schedule', color_category: 7, description: 'Test 7', location: 'Cafe',
+                        startTime: '20:00', endTime: '23:00'});
+CalendarData.push({ index: 8, text: 'Go Hospital', date: '2023-11-25', type: 'Schedule', color_category: 1, description: 'Test 8', location: 'Hospital',
+                        startTime: '13:00', endTime: '14:00'});
+CalendarData.push({ index: 9, text: 'Lunch Meeting2', date: '2023-11-29', type: 'Schedule', color_category: 0, description: 'Test 9', location: '',
+                        startTime: '14:00', endTime: '16:00'});
+CalendarData.push({ index: 10, text: 'Lunch Meeting3', date: '2023-11-29', type: 'Schedule', color_category: 0, description: 'Test 10', location: '',
+                        startTime: '16:00', endTime: '17:00'}); */
 
 // 오늘 기준으로 생성하는 것으로 수정했습니다. by 박정근
 let today = new Date();
 var nowYear = today.getFullYear();
 var nowMonth = today.getMonth() + 1;
 
-localStorage.setItem("allData", JSON.stringify(allData));
+localStorage.setItem("CalendarData", JSON.stringify(CalendarData));
 generateCalendar(today.getFullYear(), today.getMonth() + 1);
