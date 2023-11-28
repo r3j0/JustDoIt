@@ -144,11 +144,10 @@ batchButton.addEventListener('click', sendBatchData);
 
 /*
 function anotherFunction(taskData) {
-    // taskData는 배열입니다. 각 요소는 할 일 하나에 대한 정보를 담고 있는 객체입니다.
     for (let i = 0; i < taskData.length; i++) {
-        let task = taskData[i]; // 할 일 하나에 대한 정보를 담고 있는 객체
+        let task = taskData[i];
 
-        // 객체의 속성에 접근하여 정보를 얻을 수 있습니다.
+        // 객체의 속성에 접근할 수 있습니다
         console.log('Task text: ' + task.text);
         console.log('Due date: ' + task.date);
         console.log('Description: ' + task.description);
