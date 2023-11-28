@@ -61,3 +61,7 @@
   #msg {
     color: red;
   }
+
+  #tasks .overdue {
+    background-color: rgb(185, 184, 184);
+  }
