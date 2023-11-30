@@ -6,6 +6,7 @@ let textarea = document.getElementById("textarea");
 let msg = document.getElementById("msg");
 let tasks = document.getElementById("tasks");
 let add = document.getElementById("add");
+let batchButton = document.getElementById("batch");
 
 form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -55,8 +56,12 @@ let acceptData = () => {
 };
 
 let createTasks = () => {
+    let currentDate = new Date();   // 마감일 지난일 확인하기 위해 현재 날짜 변수 추가
     tasks.innerHTML = "";
     data.map((x, y) => {
+        let taskDate = new Date(x.date);
+        let isOverdue = taskDate < currentDate;
+
         let priorityColor = 'text-primary';
         if (Object.keys(data).includes('priority')) {
             switch (x.priority.toLowerCase()) {
@@ -75,7 +80,7 @@ let createTasks = () => {
         }
 
         return (tasks.innerHTML += `
-            <div id=${y}>
+            <div id=${y} class="${isOverdue ? 'overdue' : ''}">
                 <span class="fw-bold">${x.text}</span>
                 <span class="small text-secondary">${x.date}</span>
                 <p>${x.description}</p>
@@ -114,6 +119,47 @@ let editTask = (e) => {
 
     deleteTask(e);
 };
+
+
+
+// batch 버튼 누르면 데이터 보내는 함수
+function sendBatchData() {
+    //console.log('Batch button clicked'); // 함수 호출 테스트용
+
+    let taskData = data.map(task => ({
+        text: task.text,
+        date: task.date,
+        description: task.description,
+        priority: task.priority,
+        location: task.location,
+        executionTime: task.executionTime,
+    }));
+
+    console.log(taskData);
+
+    //anotherFunction(taskData);
+}
+
+batchButton.addEventListener('click', sendBatchData);
+
+/*
+function anotherFunction(taskData) {
+    for (let i = 0; i < taskData.length; i++) {
+        let task = taskData[i];
+
+        // 객체의 속성에 접근할 수 있습니다
+        console.log('Task text: ' + task.text);
+        console.log('Due date: ' + task.date);
+        console.log('Description: ' + task.description);
+        console.log('Priority: ' + task.priority);
+        console.log('Location: ' + task.location);
+        console.log('Execution time: ' + task.executionTime);
+    }
+}
+*/
+
+
+
 
 let resetForm = () => {
     textInput.value = "";
