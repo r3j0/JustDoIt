@@ -1,5 +1,5 @@
-function appendTaskBar(cell, currentDay) {
-    let currentDate = '' + nowYear + '-' + nowMonth + '-' + (Math.floor(currentDay / 10) == 0 ? '0' : '') + currentDay;
+function appendTaskBar(cell, year, month, currentDay) {
+    let currentDate = '' + year + '-' + month + '-' + (Math.floor(currentDay / 10) == 0 ? '0' : '') + currentDay;
     let currentTask = [];
 
     let todayDate = '' + nowYear + '-' + nowMonth + '-' + (Math.floor(currentDay / 10) == 0 ? '0' : '') + today.getDate();
@@ -79,6 +79,13 @@ function generateCalendar(year, month) {
                 // 각 셀에 날짜를 표시
                 let dayNumber = document.createElement('div');
                 dayNumber.classList.add('day-number');
+                dayNumber.classList.add('btn-3d');
+                dayNumber.setAttribute("data-bs-toggle", "modal");
+                dayNumber.setAttribute("data-bs-target", "#sform");
+
+                dayNumber.onclick = () => { 
+                    sdateInput.value = nowYear + "-" + ((nowMonth < 10 ? '0' : '') + nowMonth) + "-" + ((dayNumber.textContent < 10 ? '0' : '') + dayNumber.textContent);
+                };
                 
                 if (j == 0) dayNumber.classList.add('tc_red');
                 else if (j == 6) dayNumber.classList.add('tc_blue');
@@ -93,7 +100,7 @@ function generateCalendar(year, month) {
                 cell.appendChild(dayNumber);
 
                 // 달력에 표시될 일정, 할 일에 대한 구조입니다. by 박정근 (2023-11-17)
-                appendTaskBar(cell, currentDay);
+                appendTaskBar(cell, year, month, currentDay);
 
                 row.appendChild(cell);
                 currentDay++;
@@ -107,12 +114,16 @@ function generateCalendar(year, month) {
         }
     }
 
-    yearInput.value = nowYear;
-    monthInput.value = nowMonth;
-    monthYearHeader.textContent = `${nowYear} / ${monthNames[nowMonth - 1]}`;
+    yearInput.value = year;
+    monthInput.value = month;
+    nowYear = year;
+    nowMonth = month;
+    monthYearHeader.textContent = `${year} / ${monthNames[month - 1]}`;
 }
 
 function updateCalendar() {
+    let yearInput = document.getElementById('year');
+    let monthInput = document.getElementById('month');
     let year = parseInt(yearInput.value);
     let month = parseInt(monthInput.value);
 
@@ -189,6 +200,68 @@ CalendarData.push({ index: 14, text: 'Lunch Meeting1', date: '2023-12-01', type:
 CalendarData.push({ index: 15, text: 'Lunch Meeting2', date: '2023-12-01', type: 'Schedule', color_category: 0, description: 'Test 15', location: '',
                         startTime: '16:30', endTime: '18:00'}); */
 
+let sform = document.getElementById("sform");
+let addSche = document.getElementById("addSche");
+let titleInput = document.getElementById("titleInput");
+let sdateInput = document.getElementById("sdateInput");
+let stextarea = document.getElementById("stextarea");
+let stypeInput = document.getElementById("stypeInput");
+let slocationInput = document.getElementById("slocationInput");
+let sdayNumber = document.getElementsByClassName("day-number");
+
+
+sform.addEventListener("submit", (e) => {
+    e.preventDefault();
+    formValidationCal();
+});
+
+let formValidationCal = () => {
+    if (titleInput.value === "") {
+        console.log("failure");
+    } else {
+        console.log("success");
+        acceptScheduleData();
+        addSche.setAttribute("data-bs-dismiss", "modal");
+        addSche.click();
+
+        (() => {
+            addSche.setAttribute("data-bs-dismiss", "");
+        })();
+    }
+};
+
+var bgFinds = [ "none", "red", "yellow", "green", "greenyellow", "blue", "aqua", "purple" ];
+
+let acceptScheduleData = () => {
+    let startHour = parseInt(document.getElementById('startTimeHoursInput').value) || 0;
+    let startMinute = parseInt(document.getElementById('startTimeMinutesInput').value) || 0;
+    let endHour = parseInt(document.getElementById('endTimeHoursInput').value) || 0;
+    let endMinute = parseInt(document.getElementById('endTimeMinutesInput').value) || 0;
+    console.log('d');
+    CalendarData.push({
+        index: CalendarData.length + 1,
+        text: titleInput.value,
+        date: sdateInput.value,
+        description: stextarea.value,
+        type: stypeInput.value,
+        color_category: bgFinds.indexOf(document.getElementById('scolorInput').value),
+        location: slocationInput.value,
+        startTime: ((startHour < 10 ? '0' : '') + toString(startHour)) + ((startMinute < 10 ? '0' : '') + toString(startMinute)),
+        endTime: ((endHour < 10 ? '0' : '') + toString(endHour)) + ((endMinute < 10 ? '0' : '') + toString(endMinute))    
+    });
+
+    localStorage.setItem("CalendarData", JSON.stringify(CalendarData));
+
+    console.log(CalendarData);
+    generateCalendar(nowYear, nowMonth);
+
+    titleInput.value = "";
+    sdateInput.value = "";
+    stextarea.value = "";
+    stypeInput.value = "Schedule";
+    slocationInput.value = "";
+};
+
 // 오늘 기준으로 생성하는 것으로 수정했습니다. by 박정근
 let today = new Date();
 var nowYear = today.getFullYear();
@@ -196,3 +269,5 @@ var nowMonth = today.getMonth() + 1;
 
 localStorage.setItem("CalendarData", JSON.stringify(CalendarData));
 generateCalendar(today.getFullYear(), today.getMonth() + 1);
+
+console.log(CalendarData);

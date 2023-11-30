@@ -80,6 +80,8 @@ th {
 
     overflow: hidden;
     text-overflow: ellipsis;
+
+    
 }
 
 .day-taskbar:hover {
@@ -136,3 +138,7 @@ th {
     background: #4f4f4f; 
     content: ''; 
 }
+
+.btn-3d {transition: top .01s linear;}
+.btn-3d:hover   {background-color: #F9EAFF;}
+.btn-3d:active {top: 3px;}

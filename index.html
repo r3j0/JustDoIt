@@ -8,10 +8,11 @@
     <title>Calendar and To Do List</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
         crossorigin="anonymous">
-
+    
     <link rel="stylesheet" href="css/main_style.css">
     <link rel="stylesheet" href="css/calendar_style.css">
     <link rel="stylesheet" href="css/todolist_style.css">
+    
 </head>
 
 <body>
@@ -49,6 +50,68 @@
                 </tbody>
             </table>
 
+            <!-- Calendar Modal -->
+            <form class="modal fade" id="sform" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add New Schedule</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Schedule Name</p>
+                            <input type="text" class="form-control" name="" id="titleInput">
+                            <br>
+                            <p>Schedule Date</p>
+                            <input type="date" class="form-control" name="" id="sdateInput">
+                            <br>
+                            <p>Schedule Type</p>
+                            <select class="form-select" id="stypeInput">
+                                <option value="Schedule">Schedule</option>
+                                <option value="Task">Task</option>
+                            </select>
+                            <br>
+                            <p>Start Time / End Time</p>
+                            <div class="d-flex">
+                                <input type="number" class="form-control" name="" id="startTimeHoursInput" min="0" placeholder="Start-H">
+                                <input type="number" class="form-control" name="" id="startTimeMinutesInput" min="0" max="59" placeholder="Start-M">
+                                <div style="width:50px"></div>
+                                <input type="number" class="form-control" name="" id="endTimeHoursInput" min="0" placeholder="End-H">
+                                <input type="number" class="form-control" name="" id="endTimeMinutesInput" min="0" max="59" placeholder="End-H">
+                            </div>
+                            <br>
+                            <div class="d-flex">
+                                <div>
+                                    <p>Location (optional)</p>
+                                    <input type="text" class="form-control" name="" id="slocationInput">
+                                </div>
+                                <div style="width:100px"></div>
+                                <div>
+                                    <p>Color</p>
+                                    <select class="form-select" id="scolorInput">
+                                        <option value="none">None</option>
+                                        <option value="red" class="tc_red">Red</option>
+                                        <option value="yellow" class="tc_yellow">Yellow</option>
+                                        <option value="green" class="tc_green">Green</option>
+                                        <option value="greenyellow" class="tc_greenyellow">GreenYellow</option>
+                                        <option value="blue" class="tc_blue">Blue</option>
+                                        <option value="aqua" class="tc_aqua">Aqua</option>
+                                        <option value="purple" class="tc_purple">Purple</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <br>
+                            <p>Description</p>
+                            <textarea name="" class="form-control" id="stextarea" cols="30" rows="5"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" id="addSche" class="btn btn-primary">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
             <!-- calendar.js 에 캘린더 기능을 옮겨서 수정 진행했습니다. by 박정근 (2023.11.17) -->
             <script type="text/javascript" src="js/calendar.js"></script> 
         </div>
@@ -63,7 +126,7 @@
                     <i class="fas fa-plus"></i>
                 </div>
 
-                <!-- Modal -->
+                <!-- TodoList Modal -->
                 <form class="modal fade" id="form" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -91,8 +154,26 @@
                                     <input type="number" class="form-control" name="" id="executionTimeMinutesInput" min="0" max="59" placeholder="Minutes">
                                 </div>
                                 <br>
-                                <p>Location (optional)</p>
-                                <input type="text" class="form-control" name="" id="locationInput">
+                                <div class="d-flex">
+                                    <div>
+                                        <p>Location (optional)</p>
+                                        <input type="text" class="form-control" name="" id="locationInput">
+                                    </div>
+                                    <div style="width:100px"></div>
+                                    <div>
+                                        <p>Color</p>
+                                        <select class="form-select" id="colorInput">
+                                            <option value="none">None</option>
+                                            <option value="red" class="tc_red">Red</option>
+                                            <option value="yellow" class="tc_yellow">Yellow</option>
+                                            <option value="green" class="tc_green">Green</option>
+                                            <option value="greenyellow" class="tc_greenyellow">GreenYellow</option>
+                                            <option value="blue" class="tc_blue">Blue</option>
+                                            <option value="aqua" class="tc_aqua">Aqua</option>
+                                            <option value="purple" class="tc_purple">Purple</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <br>
                                 <p>Description</p>
                                 <textarea name="" class="form-control" id="textarea" cols="30" rows="5"></textarea>
