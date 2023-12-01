@@ -38,3 +38,17 @@ body {
 .tc_blue { color: blue;}
 .tc_aqua { color: aqua;}
 .tc_purple { color: purple;}
+
+/* Custom styles for the bright modal */
+
+#uform {
+    background-color: #d8dde2; /* Set a bright background color */
+}
+.modal-header {
+    background-color: #007bff; /* Set a bright header background color */
+    color: #ffffff; /* Set the text color for the header */
+}
+
+.modal-body-more {
+    color: #000000; /* Set the text color for the body */
+}
