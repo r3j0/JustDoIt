@@ -42,13 +42,44 @@ function appendTaskBar(cell, year, month, currentDay) {
         cell.appendChild(taskbar);
     }
 
-    // 더보기 (왼쪽 밑)
-    if (currentTask.length > 4) {
-        let moreBut = document.createElement('div');
-        moreBut.id = "moreButton";
-        cell.appendChild(moreBut);
+    // 더보기 버튼 modal에 해당 날짜의 모든 일정을 보여주는 코드
+    if (currentTask.length > 3) {
+        let moreButton = document.createElement('div');
+        moreButton.classList.add('day-taskbar-more');
+        moreButton.textContent = 'More';
+        moreButton.onclick = () => showAllTasks(currentTask,currentDate);
+        moreButton.style.border = '2px solid black'; // 테두리 스타일
+        moreButton.style.margin = '2px'; // 테두리에 마진값 추가
+        moreButton.style.fontSize = '12px'; // Adjust the font size
+        moreButton.style.padding = '5px 10px'; // Adjust padding for the button
+
+        cell.appendChild(moreButton);
     }
 }
+
+//더보기 버튼을 누르면 일정을 가져온다.
+function showAllTasks(tasks, currentDate) {
+    let modalBody = document.querySelector('.modal-body-more');
+    let labelHeader = document.getElementById('LabelHeader-more');
+    labelHeader.textContent = `All Schedules for ${currentDate}`;
+
+    modalBody.innerHTML = '';
+
+    for (let task of tasks) {
+        let taskDetail = document.createElement('div');
+        taskDetail.classList.add('day-task-detail');
+        taskDetail.textContent = `${currentDate} - ${task.text}`;
+
+        modalBody.appendChild(taskDetail);
+    }
+
+    // 팝업 창 열기
+    let modal = new bootstrap.Modal(document.getElementById('uform'));
+    modal.show();
+}
+
+
+
 
 function generateCalendar(year, month) {
     let yearInput = document.getElementById('year');
@@ -165,7 +196,7 @@ read_CalendarData = JSON.parse(localStorage.getItem("CalendarData"))
 if (read_CalendarData) CalendarData = read_CalendarData;
 
 // Test Data
-/* CalendarData.push({ index: 1, text: 'Database HW1', date: '2023-11-29', type: 'Task', color_category: 0, description: 'Test 1', location: 'Home',
+CalendarData.push({ index: 1, text: 'Database HW1', date: '2023-11-29', type: 'Task', color_category: 0, description: 'Test 1', location: 'Home',
                         status: 0, deadline: '2023-11-30', priority: 'high', runningTime: 120,
                         startTime: '09:00', endTime: '11:00'});
 CalendarData.push({ index: 2, text: 'Lunch Meeting', date: '2023-11-29', type: 'Schedule', color_category: 0, description: 'Test 2', location: 'Cafe',
@@ -198,7 +229,7 @@ CalendarData.push({ index: 13, text: 'Lunch Meeting5', date: '2023-11-24', type:
 CalendarData.push({ index: 14, text: 'Lunch Meeting1', date: '2023-12-01', type: 'Schedule', color_category: 0, description: 'Test 14', location: '',
                         startTime: '12:00', endTime: '14:00'});
 CalendarData.push({ index: 15, text: 'Lunch Meeting2', date: '2023-12-01', type: 'Schedule', color_category: 0, description: 'Test 15', location: '',
-                        startTime: '16:30', endTime: '18:00'}); */
+                        startTime: '16:30', endTime: '18:00'}); 
 
 let sform = document.getElementById("sform");
 let addSche = document.getElementById("addSche");
