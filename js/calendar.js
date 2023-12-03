@@ -78,6 +78,13 @@ function showAllTasks(tasks, currentDate) {
     modal.show();
 }
 
+// 다크 모드 토글 함수
+function toggleDarkMode() {
+    const body = document.body;
+    body.classList.toggle('dark-mode');
+  }
+
+
 
 
 
