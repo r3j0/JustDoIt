@@ -22,6 +22,7 @@
             <!-- Calendar - Year / Month (top left) -->
             <h2 id="month-year" style="display:inline;">2023 / November</h2>
             <button type="button" onclick="init()">Init</button>
+            <span>V. 1.3</span>
 
             <!-- Calendar - left right button, update button (top right) -->
             <div class="monthButton" id="nextMonth" onclick="nextMonth()"></div>
@@ -146,7 +147,6 @@
                 </div>
             </form>
 
-            <script type="text/javascript" src="js/calendar.js"></script> 
         </div>
 
         <!-- 캘린더와 투두리스트 사이 빈 칸 입니다. -->
@@ -174,7 +174,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Add New Task</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="resetForm()"></button>
                             </div>
                             <div class="modal-body">
                                 <p>Task Title</p>
@@ -221,7 +221,7 @@
                                 <textarea name="" class="form-control" id="textarea" cols="30" rows="5"></textarea>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="editTaskDelete()">Delete</button>
                                 <button type="submit" id="add" class="btn btn-primary">Add</button>
                             </div>
                         </div>
@@ -241,6 +241,7 @@
         </div>
     </div>
     <script src="js/todolist.js"></script>
+    <script src="js/calendar.js"></script> 
     <script src="js/assignTask.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
