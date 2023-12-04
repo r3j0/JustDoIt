@@ -3,16 +3,17 @@ body {
     margin: 0 50px;
     /*
     background-color: #e5e5e5;
-    overflow: hidden;
     */
+    overflow: hidden;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-#tasks {
-    max-height: 500px; /*스크롤가능한 보여지는 영역*/
-    overflow-y: auto;
+
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
 }
 
 .bg_red { background-color: red !important; color:white;}
@@ -41,19 +42,15 @@ body {
 
 /* Custom styles for the bright modal */
 .dark-mode {
-    background-color: #333;
+    background-color: #444;
     color: #fff;
-  }
-
-
-#uform {
-    background-color: #d8dde2; /* Set a bright background color */
-}
-.modal-header {
-    background-color: #007bff; /* Set a bright header background color */
-    color: #ffffff; /* Set the text color for the header */
 }
 
-.modal-body-more {
-    color: #000000; /* Set the text color for the body */
+/* modal 글자도 흰색으로 되는 버그 수정 */
+.modal {
+    color: #333 !important; 
+}
+
+.task-title {
+    color: #000 !important;
 }
