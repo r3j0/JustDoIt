@@ -1,8 +1,10 @@
-function appendTaskBar(cell, year, month, currentDay) {
+function appendTaskBar(cell, year, month, currentDay, mode) {
     let currentDate = '' + year + '-' + month + '-' + (Math.floor(currentDay / 10) == 0 ? '0' : '') + currentDay;
     let currentTask = [];
 
-    let todayDate = '' + nowYear + '-' + nowMonth + '-' + (Math.floor(currentDay / 10) == 0 ? '0' : '') + today.getDate();
+    let today = new Date();
+    let todayDate = String(today.getFullYear()) + "-" + String(today.getMonth() + 1).padStart(2, '0') + "-" + String(today.getDate()).padStart(2, '0');
+    let todayTime = today.toTimeString().split(' ')[0].substring(0, 5);
 
     // 전체 일정에서 날짜가 같으면 가져오기로 했는데, 최적화 여부 고민해봐야 할 것 같습니다. by 박정근
     for (let ti = 0; ti < CalendarData.length; ti++) {
@@ -10,82 +12,181 @@ function appendTaskBar(cell, year, month, currentDay) {
             currentTask.push(CalendarData[ti]);
         }
     }
+    let currentTaskByTime = currentTask.sort((a, b) => {
+        if (a.startTime > b.startTime) return 1;
+        if (a.startTime < b.startTime) return -1;
+        return 0;
+    });
 
-    for (let tb = 0; tb < Math.min(4, currentTask.length); tb++) {
+    for (let tb = 0; tb < (mode == 1 ? currentTaskByTime.length : Math.min(3, currentTaskByTime.length)); tb++) {
+        let taskbar_container = document.createElement('div');
+        if (mode == 1) {
+            taskbar_container.classList.add('day-taskbar-container');
+
+            let taskbar_time = document.createElement('div');
+            taskbar_time.classList.add('day-taskbar-time');
+            taskbar_time.textContent = currentTaskByTime[tb].startTime + '~' + currentTaskByTime[tb].endTime;
+            taskbar_container.appendChild(taskbar_time);
+
+            let taskbar_blank = document.createElement('div');
+            taskbar_blank.classList.add('day-taskbar-blank');
+            taskbar_container.appendChild(taskbar_blank);
+        }
+
         let taskbar = document.createElement('div');
 
         taskbar.classList.add('day-taskbar');
-        taskbar.id = `tb_${currentTask[tb].index}`;
-        taskbar.textContent = currentTask[tb].text;
+        taskbar.id = `tb_${currentTaskByTime[tb].index}`;
+        taskbar.textContent = currentTaskByTime[tb].text;
 
         // Task, Schedule Border Color Category
-        if (currentTask[tb].color_category !== 0) 
-            taskbar.classList.add(`bc_${bgNames[currentTask[tb].color_category - 1]}`);
+        if (currentTaskByTime[tb].color_category !== 0) 
+            taskbar.classList.add(`bc_${bgNames[currentTaskByTime[tb].color_category - 1]}`);
 
-        if (currentTask[tb].type == 'Task') {
+        if (currentTaskByTime[tb].type == 'Task') {
             taskbar.classList.add('taskbar-task');
 
             // Done or Skip
-            if (currentTask[tb].status === 1) 
+            if (currentTaskByTime[tb].status === 1) 
                 taskbar.classList.add('taskbar-taskdone');
-            else if (currentTask[tb].status === 0 && currentTask[tb].date < todayDate)
+            else if (currentTaskByTime[tb].status === 0 && currentTaskByTime[tb].date < todayDate) 
                 taskbar.classList.add('taskbar-taskskip');
         }   
         else { 
             taskbar.classList.add('taskbar-schedule');
 
             // Schedule Background Color Category
-            if (currentTask[tb].color_category !== 0) 
-                taskbar.classList.add(`bg_${bgNames[currentTask[tb].color_category - 1]}`);
+            if (currentTaskByTime[tb].color_category !== 0) 
+                taskbar.classList.add(`bg_${bgNames[currentTaskByTime[tb].color_category - 1]}`);
         }
 
-        cell.appendChild(taskbar);
+        taskbar.onclick = () => showTask(taskbar, currentTaskByTime[tb]);
+
+        console.log(currentDate, todayDate, currentTaskByTime[tb].startTime, todayTime, currentTaskByTime[tb].endTime);
+        if (currentDate == todayDate && currentTaskByTime[tb].startTime <= todayTime && todayTime <= currentTaskByTime[tb].endTime) {
+            taskbar.classList.add('runningTask');
+        }
+
+        if (mode == 1) {
+            taskbar.addEventListener("click", e => {
+                umodal.hide();
+                
+            });
+
+            taskbar_container.appendChild(taskbar);
+            cell.appendChild(taskbar_container);
+        }
+        else {
+            cell.appendChild(taskbar);
+        }
+        
     }
 
-    // 더보기 버튼 modal에 해당 날짜의 모든 일정을 보여주는 코드
-    if (currentTask.length > 3) {
-        let moreButton = document.createElement('div');
-        moreButton.classList.add('day-taskbar-more');
-        moreButton.textContent = 'More';
-        moreButton.onclick = () => showAllTasks(currentTask,currentDate);
-        moreButton.style.border = '2px solid black'; // 테두리 스타일
-        moreButton.style.margin = '2px'; // 테두리에 마진값 추가
-        moreButton.style.fontSize = '12px'; // Adjust the font size
-        moreButton.style.padding = '5px 10px'; // Adjust padding for the button
+    if (mode == 0) {
+        // 더보기 버튼 modal에 해당 날짜의 모든 일정을 보여주는 코드
+        if (currentTask.length > 3) {
+            let moreButton = document.createElement('div');
+            moreButton.classList.add('day-taskbar-more');
+            moreButton.textContent = 'More';
+            moreButton.onclick = () => showAllTasks(currentDate);
 
-        cell.appendChild(moreButton);
+            cell.appendChild(moreButton);
+        }
     }
 }
 
+// taskbar 일정 상세보기
+var tbmodal;
+function showTask(nowTaskBar, task) {
+
+    let modalBody = document.querySelector('.modal-body-tb');
+    let labelHeader = document.getElementById('LabelHeader-tb');
+    labelHeader.textContent = `${task.text}`;
+
+    modalBody.innerHTML = '';
+
+    if (task.type == 'Schedule') {
+        modalBody.innerHTML += "<h5>Schedule Title</h5><p>" + task.text + "</p>"
+                                + "<h5>Date</h5><p>" + task.date + "</p>"
+                                + "<h5>Start Time</h5><p>" + task.startTime + "</p>"
+                                + "<h5>End Time</h5><p>" + task.endTime + "</p>"
+                                + "<h5>Color Category</h5><p>" + (task.color_category == 0 ? "None" : bgNames[task.color_category - 1]) + "</p>"
+                                + (task.location == "" ? "" : "<h5>Location</h5><p>" + task.location + "</p>")
+                                + "<h5>Description</h5><p>" + task.description + "</p>";
+        document.getElementById('tbmf').innerHTML = '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Edit</button>';                       
+    }
+    else {
+        modalBody.innerHTML += "<h5>Schedule Title</h5><p>" + task.text + "</p>"
+                                + "<h5>Date</h5><p>" + task.date + "</p>"
+                                + "<h5>Start Time</h5><p>" + task.startTime + "</p>"
+                                + "<h5>End Time</h5><p>" + task.endTime + "</p>"
+                                + "<h5>Color Category</h5><p>" + (task.color_category == 0 ? "None" : bgNames[task.color_category - 1]) + "</p>"
+                                + "<h5>Priority</h5><p>" + task.priority + "</p>"
+                                + "<h5>Status</h5><p>" + (task.status == 0 ? 'To do' : 'Done') + "</p>"
+                                + "<h5>Deadline</h5><p>" + task.deadline + "</p>"
+                                + (task.location == "" ? "" : "<h5>Location</h5><p>" + task.location + "</p>")
+                                + "<h5>Description</h5><p>" + task.description + "</p>";
+        if (task.status == 0) {
+            document.getElementById('tbmf').innerHTML = '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Edit</button><button type="button" id="tbmf-done" class="btn btn-secondary tbdb" data-bs-dismiss="modal">Done</button>';   
+            document.querySelector('#tbmf-done').onclick = () => {
+                CalendarData[task.index-1].status = 1;
+                localStorage.setItem("CalendarData", JSON.stringify(CalendarData));
+                generateCalendar(nowYear, nowMonth);
+            }
+        }
+        else {
+            document.getElementById('tbmf').innerHTML = '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Edit</button><button type="button" id="tbmf-cancel" class="btn btn-secondary tbcb" data-bs-dismiss="modal">Cancel</button>';   
+            document.querySelector('#tbmf-cancel').onclick = () => {
+                CalendarData[task.index-1].status = 0;
+                localStorage.setItem("CalendarData", JSON.stringify(CalendarData));
+                generateCalendar(nowYear, nowMonth);
+            }
+        }
+    }
+
+    tbmodal = new bootstrap.Modal(document.getElementById('tbform'));
+    tbmodal.show();
+}
+
 //더보기 버튼을 누르면 일정을 가져온다.
-function showAllTasks(tasks, currentDate) {
+var umodal;
+function showAllTasks(currentDate) {
     let modalBody = document.querySelector('.modal-body-more');
     let labelHeader = document.getElementById('LabelHeader-more');
     labelHeader.textContent = `All Schedules for ${currentDate}`;
 
     modalBody.innerHTML = '';
 
-    for (let task of tasks) {
-        let taskDetail = document.createElement('div');
-        taskDetail.classList.add('day-task-detail');
-        taskDetail.textContent = `${currentDate} - ${task.text}`;
-
-        modalBody.appendChild(taskDetail);
-    }
+    appendTaskBar(modalBody, Number(currentDate.substring(0, 4)), Number(currentDate.substring(5, 7)), Number(currentDate.substring(8, 10)), 1);
 
     // 팝업 창 열기
-    let modal = new bootstrap.Modal(document.getElementById('uform'));
-    modal.show();
+    umodal = new bootstrap.Modal(document.getElementById('uform'));
+    umodal.show();
 }
 
+var darkmode = 0;
 // 다크 모드 토글 함수
 function toggleDarkMode() {
     const body = document.body;
     body.classList.toggle('dark-mode');
-  }
+    let nextMonthBut = document.getElementById("nextMonth");
+    let prevMonthBut = document.getElementById("prevMonth");
 
-
-
+    if (darkmode == 0) {
+        nextMonthBut.classList.remove('monthButton');
+        nextMonthBut.classList.add('monthButton_dark');
+        prevMonthBut.classList.remove('monthButton');
+        prevMonthBut.classList.add('monthButton_dark');
+        darkmode = 1;
+    }
+    else {
+        nextMonthBut.classList.remove('monthButton_dark');
+        nextMonthBut.classList.add('monthButton');
+        prevMonthBut.classList.remove('monthButton_dark');
+        prevMonthBut.classList.add('monthButton');
+        darkmode = 0;
+    }
+}
 
 
 function generateCalendar(year, month) {
@@ -138,7 +239,7 @@ function generateCalendar(year, month) {
                 cell.appendChild(dayNumber);
 
                 // 달력에 표시될 일정, 할 일에 대한 구조입니다. by 박정근 (2023-11-17)
-                appendTaskBar(cell, year, month, currentDay);
+                appendTaskBar(cell, year, month, currentDay, 0);
 
                 row.appendChild(cell);
                 currentDay++;
@@ -202,42 +303,6 @@ var CalendarData = [];
 read_CalendarData = JSON.parse(localStorage.getItem("CalendarData"))
 if (read_CalendarData) CalendarData = read_CalendarData;
 
-// Test Data
-CalendarData.push({ index: 1, text: 'Database HW1', date: '2023-11-29', type: 'Task', color_category: 0, description: 'Test 1', location: 'Home',
-                        status: 0, deadline: '2023-11-30', priority: 'high', runningTime: 120,
-                        startTime: '09:00', endTime: '11:00'});
-CalendarData.push({ index: 2, text: 'Lunch Meeting', date: '2023-11-29', type: 'Schedule', color_category: 0, description: 'Test 2', location: 'Cafe',
-                        startTime: '14:00', endTime: '16:00'});
-CalendarData.push({ index: 3, text: 'Dinner Meeting', date: '2023-11-30', type: 'Schedule', color_category: 4, description: 'Test 3', location: 'Restaurant',
-                        startTime: '18:00', endTime: '20:00'});
-CalendarData.push({ index: 4, text: 'Lend books', date: '2023-11-30', type: 'Task', color_category: 2, description: 'Test 4', location: 'Library',
-                        status: 0, deadline: '', priority: 'low', runningTime: 30,
-                        startTime: '20:00', endTime: '20:30'});
-CalendarData.push({ index: 5, text: 'Wash dishes', date: '2023-11-01', type: 'Task', color_category: 5, description: 'Test 5', location: 'Home',
-                        status: 0, deadline: '', priority: 'low', runningTime: 20,
-                        startTime: '09:00', endTime: '09:20'});
-CalendarData.push({ index: 6, text: 'Send Mail', date: '2023-11-21', type: 'Task', color_category: 6, description: 'Test 6', location: 'Home',
-                        status: 1, deadline: '2023-11-25', priority: 'medium', runningTime: 60,
-                        startTime: '09:00', endTime: '10:00'});
-CalendarData.push({ index: 7, text: 'Party', date: '2023-11-29', type: 'Schedule', color_category: 7, description: 'Test 7', location: 'Cafe',
-                        startTime: '20:00', endTime: '23:00'});
-CalendarData.push({ index: 8, text: 'Go Hospital', date: '2023-11-25', type: 'Schedule', color_category: 1, description: 'Test 8', location: 'Hospital',
-                        startTime: '13:00', endTime: '14:00'});
-CalendarData.push({ index: 9, text: 'Lunch Meeting1', date: '2023-11-24', type: 'Schedule', color_category: 0, description: 'Test 9', location: '',
-                        startTime: '14:00', endTime: '17:00'});
-CalendarData.push({ index: 10, text: 'Lunch Meeting2', date: '2023-11-24', type: 'Schedule', color_category: 0, description: 'Test 10', location: '',
-                        startTime: '17:00', endTime: '18:00'});
-CalendarData.push({ index: 11, text: 'Lunch Meeting3', date: '2023-11-24', type: 'Schedule', color_category: 0, description: 'Test 11', location: '',
-                        startTime: '18:00', endTime: '19:00'});
-CalendarData.push({ index: 12, text: 'Lunch Meeting4', date: '2023-11-24', type: 'Schedule', color_category: 0, description: 'Test 12', location: '',
-                        startTime: '19:00', endTime: '20:00'});
-CalendarData.push({ index: 13, text: 'Lunch Meeting5', date: '2023-11-24', type: 'Schedule', color_category: 0, description: 'Test 13', location: '',
-                        startTime: '20:00', endTime: '21:00'});
-CalendarData.push({ index: 14, text: 'Lunch Meeting1', date: '2023-12-01', type: 'Schedule', color_category: 0, description: 'Test 14', location: '',
-                        startTime: '12:00', endTime: '14:00'});
-CalendarData.push({ index: 15, text: 'Lunch Meeting2', date: '2023-12-01', type: 'Schedule', color_category: 0, description: 'Test 15', location: '',
-                        startTime: '16:30', endTime: '18:00'}); 
-
 let sform = document.getElementById("sform");
 let addSche = document.getElementById("addSche");
 let titleInput = document.getElementById("titleInput");
@@ -246,7 +311,10 @@ let stextarea = document.getElementById("stextarea");
 let stypeInput = document.getElementById("stypeInput");
 let slocationInput = document.getElementById("slocationInput");
 let sdayNumber = document.getElementsByClassName("day-number");
-
+let startTimeHoursInput = document.getElementById('startTimeHoursInput')
+let startTimeMinutesInput = document.getElementById('startTimeMinutesInput')
+let endTimeHoursInput = document.getElementById('endTimeHoursInput')
+let endTimeMinutesInput = document.getElementById('endTimeMinutesInput')
 
 sform.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -254,7 +322,12 @@ sform.addEventListener("submit", (e) => {
 });
 
 let formValidationCal = () => {
-    if (titleInput.value === "") {
+    if (titleInput.value === "" || 
+        sdateInput.value === "" ||
+        startTimeHoursInput.value === "" || 
+        startTimeMinutesInput.value === "" || 
+        endTimeHoursInput.value === "" || 
+        endTimeMinutesInput.value === "") {
         console.log("failure");
     } else {
         console.log("success");
@@ -270,12 +343,13 @@ let formValidationCal = () => {
 
 var bgFinds = [ "none", "red", "yellow", "green", "greenyellow", "blue", "aqua", "purple" ];
 
+
 let acceptScheduleData = () => {
-    let startHour = parseInt(document.getElementById('startTimeHoursInput').value) || 0;
-    let startMinute = parseInt(document.getElementById('startTimeMinutesInput').value) || 0;
-    let endHour = parseInt(document.getElementById('endTimeHoursInput').value) || 0;
-    let endMinute = parseInt(document.getElementById('endTimeMinutesInput').value) || 0;
-    console.log('d');
+    let startHours = startTimeHoursInput.value;
+    let startMinutes = startTimeMinutesInput.value;
+    let endHours = endTimeHoursInput.value;
+    let endMinutes = endTimeMinutesInput.value;
+    
     CalendarData.push({
         index: CalendarData.length + 1,
         text: titleInput.value,
@@ -284,8 +358,8 @@ let acceptScheduleData = () => {
         type: stypeInput.value,
         color_category: bgFinds.indexOf(document.getElementById('scolorInput').value),
         location: slocationInput.value,
-        startTime: ((startHour < 10 ? '0' : '') + toString(startHour)) + ((startMinute < 10 ? '0' : '') + toString(startMinute)),
-        endTime: ((endHour < 10 ? '0' : '') + toString(endHour)) + ((endMinute < 10 ? '0' : '') + toString(endMinute))    
+        startTime: ((startHours < 10 ? '0' : '') + startHours) + ':' + ((startMinutes < 10 ? '0' : '') + startMinutes),
+        endTime: ((endHours < 10 ? '0' : '') + endHours) + ':' + ((endMinutes < 10 ? '0' : '') + endMinutes)
     });
 
     localStorage.setItem("CalendarData", JSON.stringify(CalendarData));
@@ -309,3 +383,9 @@ localStorage.setItem("CalendarData", JSON.stringify(CalendarData));
 generateCalendar(today.getFullYear(), today.getMonth() + 1);
 
 console.log(CalendarData);
+
+function init() {
+    CalendarData = [];
+    localStorage.setItem("CalendarData", JSON.stringify(CalendarData));
+    generateCalendar(nowYear, nowMonth);
+}
