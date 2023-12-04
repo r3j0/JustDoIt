@@ -41,6 +41,7 @@ let acceptData = () => {
     let minutes = parseInt(document.getElementById('executionTimeMinutesInput').value) || 0;
 
     data.push({
+        index: (data.length == 0 ? 1 : data[data.length - 1]['index'] + 1),
         text: textInput.value,
         date: dateInput.value,
         description: textarea.value,
@@ -56,7 +57,7 @@ let acceptData = () => {
     createTasks();
 };
 
-let createTasks = () => {
+function createTasks() {
     let currentDate = new Date();   // 마감일 지난일 확인하기 위해 현재 날짜 변수 추가
     tasks.innerHTML = "";
     data.map((x, y) => {
@@ -142,34 +143,13 @@ function sendBatchData() {
         location: task.location,
         executionTime: task.executionTime,
     }));
+    console.log(taskData);
 
     if (data.length == 0) alert("There is nothing to batch.");
-    else {
-        console.log(taskData);
-        assignTasks();
-    }
+    else assignTasks();
 }
 
 batchButton.addEventListener('click', sendBatchData);
-
-/*
-function anotherFunction(taskData) {
-    for (let i = 0; i < taskData.length; i++) {
-        let task = taskData[i];
-
-        // 객체의 속성에 접근할 수 있습니다
-        console.log('Task text: ' + task.text);
-        console.log('Due date: ' + task.date);
-        console.log('Description: ' + task.description);
-        console.log('Priority: ' + task.priority);
-        console.log('Location: ' + task.location);
-        console.log('Execution time: ' + task.executionTime);
-    }
-}
-*/
-
-
-
 
 let resetForm = () => {
     textInput.value = "";

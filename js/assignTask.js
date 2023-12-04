@@ -177,7 +177,8 @@ function assignTasks() {
                 let tmpEndTime = nextMinuteValue(availableTime[at]['date'], availableTime[at]['start'], taskGroup[tg][assignTasksByIdx[atk] - 1]['executionTime']);
                 if (tmpEndTime == '00:00') tmpEndTime = '24:00';
 
-                calendarInput.push({'text':taskGroup[tg][assignTasksByIdx[atk] - 1]['text'],
+                calendarInput.push({'index':taskGroup[tg][assignTasksByIdx[atk] - 1]['index'],
+                                    'text':taskGroup[tg][assignTasksByIdx[atk] - 1]['text'],
                                     'date': availableTime[at]['date'],
                                     'type': 'Task',
                                     'color_category': taskGroup[tg][assignTasksByIdx[atk] - 1]['color_category'],
@@ -200,7 +201,7 @@ function assignTasks() {
         }
     }
     
-    // [TODO] 이후 남겨진 task 들은, availableTime 이후 시간에 배치
+    // 이후 남겨진 task 들은, availableTime 이후 시간에 배치
     while (true) {
         let maxTasks = 0;
         for (let tgi = 0; tgi < taskGroup.length; tgi++) maxTasks = imax(maxTasks, taskGroup[tgi].length);
@@ -257,7 +258,8 @@ function assignTasks() {
                 let tmpEndTime = nextMinuteValue(dateRemainTask, dateRemainTaskStartTime, taskGroup[tg][assignTasksByIdx[atk] - 1]['executionTime']);
                 if (tmpEndTime == '00:00') tmpEndTime = '24:00';
 
-                calendarInput.push({'text':taskGroup[tg][assignTasksByIdx[atk] - 1]['text'],
+                calendarInput.push({'index':taskGroup[tg][assignTasksByIdx[atk] - 1]['index'],
+                                    'text':taskGroup[tg][assignTasksByIdx[atk] - 1]['text'],
                                     'date': dateRemainTask,
                                     'type': 'Task',
                                     'color_category': taskGroup[tg][assignTasksByIdx[atk] - 1]['color_category'],
@@ -284,9 +286,11 @@ function assignTasks() {
     console.log("Calendar Input Data");
     console.log(calendarInput);
 
+    data = JSON.parse(localStorage.getItem("data"));
+
     for (let ci = 0; ci < calendarInput.length; ci++) {
         CalendarData.push({
-            index: CalendarData.length + 1,
+            index: (CalendarData.length == 0 ? 1 : CalendarData[CalendarData.length - 1]['index'] + 1),
             text: calendarInput[ci]['text'],
             date: calendarInput[ci]['date'],
             type: 'Task',
@@ -300,8 +304,16 @@ function assignTasks() {
             startTime: calendarInput[ci]['startTime'],
             endTime: calendarInput[ci]['endTime']
         });
-
+        
+        for(let i = 0; i < todolistData.length; i++) {
+            if(calendarInput[ci]['index'] == data[i]['index'])  {
+                data.splice(i, 1);
+                break;
+            }
+        }
     }
     localStorage.setItem("CalendarData", JSON.stringify(CalendarData));
+    localStorage.setItem("data", JSON.stringify(data));
     generateCalendar(nowYear, nowMonth);
+    createTasks();
 }

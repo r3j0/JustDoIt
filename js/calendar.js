@@ -62,7 +62,6 @@ function appendTaskBar(cell, year, month, currentDay, mode) {
 
         taskbar.onclick = () => showTask(taskbar, currentTaskByTime[tb]);
 
-        console.log(currentDate, todayDate, currentTaskByTime[tb].startTime, todayTime, currentTaskByTime[tb].endTime);
         if (currentDate == todayDate && currentTaskByTime[tb].startTime <= todayTime && todayTime <= currentTaskByTime[tb].endTime) {
             taskbar.classList.add('runningTask');
         }
@@ -351,7 +350,7 @@ let acceptScheduleData = () => {
     let endMinutes = endTimeMinutesInput.value;
     
     CalendarData.push({
-        index: CalendarData.length + 1,
+        index: (CalendarData.length == 0 ? 1 : CalendarData[CalendarData.length - 1]['index'] + 1),
         text: titleInput.value,
         date: sdateInput.value,
         description: stextarea.value,
