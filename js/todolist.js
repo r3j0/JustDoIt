@@ -14,11 +14,11 @@ form.addEventListener("submit", (e) => {
 });
 
 let formValidation = () => {
-    if (textInput.value === "") {
+    let hours = Number(document.getElementById('executionTimeHoursInput').value);
+    let minutes = Number(document.getElementById('executionTimeMinutesInput').value);
+
+    if (textInput.value === "" || hours * 60 + minutes > 900) {
         console.log("failure");
-        if (msg) {
-            msg.innerHTML = "Task cannot be blank";
-        }
     } else {
         console.log("success");
         if (msg) {
@@ -41,6 +41,7 @@ let acceptData = () => {
     let minutes = parseInt(document.getElementById('executionTimeMinutesInput').value) || 0;
 
     data.push({
+        calinex: -1,
         index: (data.length == 0 ? 1 : data[data.length - 1]['index'] + 1),
         text: textInput.value,
         date: dateInput.value,
@@ -83,6 +84,7 @@ function createTasks() {
 
         return (tasks.innerHTML += `
             <div id=${y} class="${isOverdue ? 'overdue' : ''}" style="display:flex">
+                <span display="none">${x.index}</span>
                 <div style="flex-basis:50%; border:0">
                     <span class="task-title fw-bold">${x.text}</span>
                     <span class="small text-secondary">${x.date}</span>
@@ -108,25 +110,42 @@ function createTasks() {
 
 
 let deleteTask = (e) => {
-    e.parentElement.parentElement.remove();
+    e.parentElement.parentElement.parentElement.remove();
     data.splice(e.parentElement.parentElement.id, 1);
     localStorage.setItem("data", JSON.stringify(data));
     console.log(data);
+    createTasks();
 };
 
+function editTaskDelete() {
+    if (selDataIdx != -1) {
+        data.splice(selDataIdx, 1);
+        localStorage.setItem("data", JSON.stringify(data));
+        createTasks();
+        selDataIdx = -1;
+    }
+}
+
 let editTask = (e) => {
-    let selectedTask = e.parentElement.parentElement;
+    data = JSON.parse(localStorage.getItem("data"))
+    let selectedTaskIdx = e.parentElement.parentElement.parentElement.children[0].innerHTML;
+    let selectedTask;
+    
+    for (let i = 0; i < data.length; i++) {
+        if (selectedTaskIdx == data[i].index) {
+            selectedTask = data[i];
+            selDataIdx = i;
+            break;
+        }
+    }
 
-    // 고칠 예정
-    textInput.value = selectedTask.children[0].innerHTML;
-    dateInput.value = selectedTask.children[1].innerHTML;
-    textarea.value = selectedTask.children[2].innerHTML;
-    document.getElementById('locationInput').value = selectedTask.children[3].textContent.split(": ")[1];
-    document.getElementById('priorityInput').value = selectedTask.children[4].textContent.split(": ")[1];
-    document.getElementById('executionTimeHoursInput').value = Math.floor(selectedTask.children[5].textContent.split(": ")[1] / 60);
-    document.getElementById('executionTimeMinutesInput').value = selectedTask.children[5].textContent.split(": ")[1] % 60;
-
-    deleteTask(e);
+    textInput.value = selectedTask.text;
+    dateInput.value = selectedTask.date;
+    textarea.value = selectedTask.description;
+    document.getElementById('locationInput').value = selectedTask.location;
+    document.getElementById('priorityInput').value = selectedTask.priority;
+    document.getElementById('executionTimeHoursInput').value = Math.floor(selectedTask.executionTime / 60);
+    document.getElementById('executionTimeMinutesInput').value = selectedTask.executionTime % 60;
 };
 
 
@@ -149,6 +168,7 @@ function sendBatchData() {
     else assignTasks();
 }
 
+var selDataIdx = -1;
 batchButton.addEventListener('click', sendBatchData);
 
 let resetForm = () => {
