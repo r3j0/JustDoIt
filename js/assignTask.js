@@ -177,7 +177,8 @@ function assignTasks() {
                 let tmpEndTime = nextMinuteValue(availableTime[at]['date'], availableTime[at]['start'], taskGroup[tg][assignTasksByIdx[atk] - 1]['executionTime']);
                 if (tmpEndTime == '00:00') tmpEndTime = '24:00';
 
-                calendarInput.push({'index':taskGroup[tg][assignTasksByIdx[atk] - 1]['index'],
+                calendarInput.push({'calindex':taskGroup[tg][assignTasksByIdx[atk] - 1]['calindex'],
+                                    'index':taskGroup[tg][assignTasksByIdx[atk] - 1]['index'],
                                     'text':taskGroup[tg][assignTasksByIdx[atk] - 1]['text'],
                                     'date': availableTime[at]['date'],
                                     'type': 'Task',
@@ -258,7 +259,8 @@ function assignTasks() {
                 let tmpEndTime = nextMinuteValue(dateRemainTask, dateRemainTaskStartTime, taskGroup[tg][assignTasksByIdx[atk] - 1]['executionTime']);
                 if (tmpEndTime == '00:00') tmpEndTime = '24:00';
 
-                calendarInput.push({'index':taskGroup[tg][assignTasksByIdx[atk] - 1]['index'],
+                calendarInput.push({'calindex':taskGroup[tg][assignTasksByIdx[atk] - 1]['calindex'],
+                                    'index':taskGroup[tg][assignTasksByIdx[atk] - 1]['index'],
                                     'text':taskGroup[tg][assignTasksByIdx[atk] - 1]['text'],
                                     'date': dateRemainTask,
                                     'type': 'Task',
@@ -287,6 +289,7 @@ function assignTasks() {
     console.log(calendarInput);
 
     data = JSON.parse(localStorage.getItem("data"));
+    CalendarData = JSON.parse(localStorage.getItem("CalendarData"));
 
     for (let ci = 0; ci < calendarInput.length; ci++) {
         CalendarData.push({
@@ -305,15 +308,22 @@ function assignTasks() {
             endTime: calendarInput[ci]['endTime']
         });
         
-        for(let i = 0; i < todolistData.length; i++) {
+        for(let i = 0; i < data.length; i++) {
             if(calendarInput[ci]['index'] == data[i]['index'])  {
                 data.splice(i, 1);
+                break;
+            }
+        }
+
+        for(let i = 0; i < CalendarData.length; i++) {
+            if(calendarInput[ci]['calindex'] == CalendarData[i]['index']) {
+                CalendarData.splice(i, 1);
                 break;
             }
         }
     }
     localStorage.setItem("CalendarData", JSON.stringify(CalendarData));
     localStorage.setItem("data", JSON.stringify(data));
-    generateCalendar(nowYear, nowMonth);
     createTasks();
+    generateCalendar(nowYear, nowMonth);
 }
