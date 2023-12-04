@@ -112,7 +112,8 @@ function showTask(nowTaskBar, task) {
                                 + "<h5>Color Category</h5><p>" + (task.color_category == 0 ? "None" : bgNames[task.color_category - 1]) + "</p>"
                                 + (task.location == "" ? "" : "<h5>Location</h5><p>" + task.location + "</p>")
                                 + "<h5>Description</h5><p>" + task.description + "</p>";
-        document.getElementById('tbmf').innerHTML = '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Edit</button>';                       
+        document.getElementById('tbmf').innerHTML = `<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Edit</button>
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Delete</button>`;                       
     }
     else {
         modalBody.innerHTML += "<h5>Schedule Title</h5><p>" + task.text + "</p>"
@@ -126,7 +127,9 @@ function showTask(nowTaskBar, task) {
                                 + (task.location == "" ? "" : "<h5>Location</h5><p>" + task.location + "</p>")
                                 + "<h5>Description</h5><p>" + task.description + "</p>";
         if (task.status == 0) {
-            document.getElementById('tbmf').innerHTML = '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Edit</button><button type="button" id="tbmf-done" class="btn btn-secondary tbdb" data-bs-dismiss="modal">Done</button>';   
+            document.getElementById('tbmf').innerHTML = `<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Edit</button>
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Delete</button>
+                                                        <button type="button" id="tbmf-done" class="btn btn-secondary tbdb" data-bs-dismiss="modal">Done</button>`;   
             document.querySelector('#tbmf-done').onclick = () => {
                 CalendarData[task.index-1].status = 1;
                 localStorage.setItem("CalendarData", JSON.stringify(CalendarData));
