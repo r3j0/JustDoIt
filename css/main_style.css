@@ -4,7 +4,6 @@ body {
     /*
     background-color: #e5e5e5;
     */
-    overflow: hidden;
     height: 100vh;
     display: flex;
     justify-content: center;
