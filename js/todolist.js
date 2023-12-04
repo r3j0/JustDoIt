@@ -44,6 +44,7 @@ let acceptData = () => {
         text: textInput.value,
         date: dateInput.value,
         description: textarea.value,
+        color_category: document.getElementById('colorInput').value,
         priority: document.getElementById('priorityInput').value,
         location: document.getElementById('locationInput').value,
         executionTime: hours * 60 + minutes,
@@ -80,17 +81,23 @@ let createTasks = () => {
         }
 
         return (tasks.innerHTML += `
-            <div id=${y} class="${isOverdue ? 'overdue' : ''}">
-                <span class="fw-bold">${x.text}</span>
-                <span class="small text-secondary">${x.date}</span>
-                <p>${x.description}</p>
-                ${x.location ? `<span class="small text-secondary">Location: ${x.location}</span>` : ''}
-                <span class="small ${priorityColor}">Priority: ${x.priority}</span>
-                <span class="small text-secondary">Execution Time: ${Math.floor(x.executionTime / 60)}h ${x.executionTime % 60}min</span>
-                <span class="options">
-                    <i onClick= "editTask(this)" data-bs-toggle="modal" data-bs-target="#form" class="fas fa-edit"></i>
-                    <i onClick ="deleteTask(this);createTasks()" class="fas fa-trash-alt"></i>
-                </span>
+            <div id=${y} class="${isOverdue ? 'overdue' : ''}" style="display:flex">
+                <div style="flex-basis:50%; border:0">
+                    <span class="task-title fw-bold">${x.text}</span>
+                    <span class="small text-secondary">${x.date}</span>
+                    <p>${x.description}</p>
+                    ${x.location ? `<span class="small text-secondary">Location: ${x.location}</span>` : ''}
+                </div>
+                <div style="border:0">
+                    <span class="small ${priorityColor}">Priority: ${x.priority}</span>
+                    <span class="small text-secondary">Execution Time: <br>${Math.floor(x.executionTime / 60)}h ${x.executionTime % 60}min</span>
+                </div>
+                <div style="border:0">
+                    <span class="options">
+                        <i onClick="editTask(this)" data-bs-toggle="modal" data-bs-target="#form" class="fas fa-edit"></i>
+                        <i onClick="deleteTask(this);createTasks()" class="fas fa-trash-alt"></i>
+                    </span>
+                </div>
             </div>
         `);
     });
@@ -109,6 +116,7 @@ let deleteTask = (e) => {
 let editTask = (e) => {
     let selectedTask = e.parentElement.parentElement;
 
+    // 고칠 예정
     textInput.value = selectedTask.children[0].innerHTML;
     dateInput.value = selectedTask.children[1].innerHTML;
     textarea.value = selectedTask.children[2].innerHTML;
@@ -135,9 +143,11 @@ function sendBatchData() {
         executionTime: task.executionTime,
     }));
 
-    console.log(taskData);
-
-    //anotherFunction(taskData);
+    if (data.length == 0) alert("There is nothing to batch.");
+    else {
+        console.log(taskData);
+        assignTasks();
+    }
 }
 
 batchButton.addEventListener('click', sendBatchData);
