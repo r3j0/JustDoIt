@@ -139,7 +139,7 @@ function scheduleChange() {
     CalendarData[selSceIdx].date = document.getElementById('sdateInput').value;
 
     CalendarData[selSceIdx].startTime = ((Number(document.getElementById('startTimeHoursInput').value) < 10 ? '0' : '') + String(Number(document.getElementById('startTimeHoursInput').value))) + ":" + ((Number(document.getElementById('startTimeMinutesInput').value) < 10 ? '0' : '') + String(Number(document.getElementById('startTimeMinutesInput').value)))
-    CalendarData[selSceIdx].endime = ((Number(document.getElementById('endTimeHoursInput').value) < 10 ? '0' : '') + String(Number(document.getElementById('endTimeHoursInput').value))) + ":" + ((Number(document.getElementById('endTimeMinutesInput').value) < 10 ? '0' : '') + String(Number(document.getElementById('endTimeMinutesInput').value)))
+    CalendarData[selSceIdx].endTime = ((Number(document.getElementById('endTimeHoursInput').value) < 10 ? '0' : '') + String(Number(document.getElementById('endTimeHoursInput').value))) + ":" + ((Number(document.getElementById('endTimeMinutesInput').value) < 10 ? '0' : '') + String(Number(document.getElementById('endTimeMinutesInput').value)))
     CalendarData[selSceIdx].location = document.getElementById('slocationInput').value;
     CalendarData[selSceIdx].color_category = bgFinds.indexOf(document.getElementById('scolorInput').value);
     CalendarData[selSceIdx].description = document.getElementById('stextarea').value;
