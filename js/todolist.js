@@ -84,7 +84,7 @@ function createTasks() {
 
         return (tasks.innerHTML += `
             <div id=${y} class="${isOverdue ? 'overdue' : ''}" style="display:flex">
-                <span display="none">${x.index}</span>
+                <span style="display:none;">${x.index}</span>
                 <div style="flex-basis:50%; border:0">
                     <span class="task-title fw-bold">${x.text}</span>
                     <span class="small text-secondary">${x.date}</span>
@@ -111,7 +111,7 @@ function createTasks() {
 
 let deleteTask = (e) => {
     e.parentElement.parentElement.parentElement.remove();
-    data.splice(e.parentElement.parentElement.id, 1);
+    data.splice(e.parentElement.parentElement.parentElement.id, 1);
     localStorage.setItem("data", JSON.stringify(data));
     console.log(data);
     createTasks();
