@@ -513,12 +513,3 @@ localStorage.setItem("CalendarData", JSON.stringify(CalendarData));
 generateCalendar(today.getFullYear(), today.getMonth() + 1);
 
 console.log(CalendarData);
-
-function init() {
-    CalendarData = [];
-    localStorage.setItem("CalendarData", JSON.stringify(CalendarData));
-    data = [];
-    localStorage.setItem("data", JSON.stringify(data));
-    generateCalendar(nowYear, nowMonth);
-    createTasks();
-}
