@@ -136,9 +136,6 @@ function assignTasks() {
             if (weightRange <= 0) break;
             if (taskGroup[tg].length == 0) continue;
             let dp = create2DArray(taskGroup[tg].length + 1, weightRange+1);
-
-            //console.log(JSON.parse(JSON.stringify(availableTime[at])));
-            //console.log(JSON.parse(JSON.stringify(taskGroup[tg])));
             
             // Knapsack
             for (let j = 1; j <= weightRange; j++) {

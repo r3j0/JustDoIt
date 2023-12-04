@@ -15,13 +15,13 @@ body {
     user-select:none;
 }
 
-.bg_red { background-color: red !important; color:white;}
+.bg_red { background-color: red !important; color:white !important;}
 .bg_yellow { background-color: yellow !important;}
-.bg_green { background-color: green !important;}
+.bg_green { background-color: green !important; color:white !important;}
 .bg_greenyellow { background-color: greenyellow !important;}
-.bg_blue { background-color: blue !important; color:white;}
+.bg_blue { background-color: blue !important; color:white !important;}
 .bg_aqua { background-color: aqua !important;}
-.bg_purple { background-color: purple !important; color:white;}
+.bg_purple { background-color: purple !important; color:white !important;}
 
 .bc_red { border-color: red !important;}
 .bc_yellow { border-color: yellow !important;}
