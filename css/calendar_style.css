@@ -1,13 +1,16 @@
+/* Calendar */
 #container-calendar {
-    flex-basis:70%; /* flex 반영하여 가로 길이 정하고 비율 수정 조금 했습니다. by 박정근 (2023.11.17) */
+    flex-basis:70%;
 }
 
+/* top-right Update Button */
 #date-update {
     display:block;
     float:right;
     margin-right : 30px;
 }
 
+/* top-right Arrow Button */
 .monthButton {
     width: 15px;
     height: 15px;
@@ -16,11 +19,39 @@
     margin: 10px;
     cursor: pointer;
     float: right;
+
+    background-color: rgb(255, 255, 255);
+    transition: 0.5s cubic-bezier(0.47, 1, 0.15, 0.72);  
+}
+.monthButton:hover {
+    box-shadow: 0 0 30px #ffffff;
+    outline-offset: 5px;
+    outline: 2px solid #ffffff;
 }
 
-.prevMonth { transform: rotate(-135deg); }
-.nextMonth { transform: rotate(45deg); }
+.monthButton_dark {
+    width: 15px;
+    height: 15px;
+    border: 3px solid white;
+    border-width: 3px 3px 0 0;
+    margin: 10px;
+    cursor: pointer;
+    float: right;
 
+    background-color: #444;
+    transition: 0.5s cubic-bezier(0.47, 1, 0.15, 0.72);  
+}
+.monthButton_dark:hover {
+    box-shadow: 0 0 30px #444;
+    outline-offset: 5px;
+    outline: 2px solid #444;
+}
+
+
+#prevMonth { transform: rotate(-135deg); }
+#nextMonth { transform: rotate(45deg); }
+
+/* Calendar Table */
 table {
     width:100%; /*전체 화면에서 달력이 차지하는 비율설정*/
     border-collapse: collapse;
@@ -52,36 +83,49 @@ th {
 
 .day-number {
     position:absolute;
-    top: 5px;
-    left: 5px;
+    top: 8px;
+    left: 8px;
     font-size: 0.8em;
 }
 
 .today_mark {
-    border-radius:30%;
+    border-radius:150%;
     background-color: #000000;
     color:white;
 }
 
+.runningTask {
+    font-weight:bold;
+    text-decoration: underline;
+}
+
 /* Task Bar */
+.day-taskbar-container {
+    display:flex;
+    width:100%; 
+    height:30px;
+    margin-top:2px;
+
+    text-overflow: ellipsis;
+}
+.day-taskbar-time {flex-basis: 20%;}
+.day-taskbar-blank {flex-basis: 3%;}
 
 .day-taskbar {
-    
     display:block;
     width:100%; 
     height:25px;
     margin-top:2px;
     text-align:left;
     box-shadow: 0px 1px 2px #444;
-
+    background-color: white;
+    color:black;
     font-family: 'Arial', sans-serif;
     line-height:25px;
     text-indent:5px;
 
     overflow: hidden;
     text-overflow: ellipsis;
-
-    
 }
 
 .day-taskbar:hover {
@@ -109,36 +153,52 @@ th {
     text-decoration: underline;
 }
 
-#moreButton {
-    position: absolute;
-    bottom:0px;
-    left: 0px; 
-    width: 25px;
-    height:25px; 
-    cursor:pointer; 
-    z-index: 1;
+
+.day-taskbar-more {
+    border: 2px solid black;
+    color:black;
+    background-color: white;
+    margin: 2px;
+    font-size: 12px;
+    height:20px;
+    box-shadow: 0px 1px 1px #444;
 }
-#moreButton:before { 
-    position:absolute; 
-    top: 50%; 
-    left: 50%; 
-    width: 16px; 
-    height: 2px; 
-    margin: -1px 0 0 -8px; 
-    background: #4f4f4f; 
-    content: ''; 
-}
-#moreButton:after {
-    position: absolute; 
-    top: 50%; 
-    left: 50%; 
-    width: 2px; 
-    height: 16px; 
-    margin: -8px 0 0 -1px; 
-    background: #4f4f4f; 
-    content: ''; 
+.day-taskbar-more:hover {
+    opacity:0.5; /* 투명도 조절 */
+    cursor:pointer; /* 마우스 올렸을 때 손모양 마우스 */
+    
+    transition: all 0.5s ease-out; /* 애니메이션 천천히 */ 
 }
 
-.btn-3d {transition: top .01s linear;}
-.btn-3d:hover   {background-color: #F9EAFF;}
-.btn-3d:active {top: 3px;}
+.btn-3d {
+    width:18px;
+    height:18px;
+    border-radius:150%;
+    transition: top .0001s linear;
+    cursor:pointer; 
+}
+.btn-3d:hover   {background-color: #FFDEE7;}
+
+.modal-header {
+    background-color: #007bff; /* Set a bright header background color */
+    color: #ffffff; /* Set the text color for the header */
+}
+
+.modal-body-more {
+    color: #000000; /* Set the text color for the body */
+    padding:50px;
+}
+
+.modal-body-tb {
+    color: #000000; /* Set the text color for the body */
+    padding:20px;
+}
+
+.tbdb {
+    background-color: #007bff;
+    border: #007bff;
+}
+.tbcb {
+    background-color: #ff6352;
+    border: #ff6352;
+}
