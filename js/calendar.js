@@ -49,7 +49,7 @@ function appendTaskBar(cell, year, month, currentDay, mode) {
             // Done or Skip
             if (currentTaskByTime[tb].status == 1) 
                 taskbar.classList.add('taskbar-taskdone');
-            else if (currentTaskByTime[tb].status == 0 && currentTaskByTime[tb].date < todayDate) {
+            else if (currentTaskByTime[tb].status == 0 && (currentTaskByTime[tb].date < todayDate || currentTaskByTime[tb].deadline < todayDate)) {
                 taskbar.classList.add('taskbar-taskskip');
                 skipTaskAppend(tb, currentTaskByTime);
             }

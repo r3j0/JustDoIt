@@ -41,7 +41,7 @@ let acceptData = () => {
     let minutes = parseInt(document.getElementById('executionTimeMinutesInput').value) || 0;
 
     data.push({
-        calinex: -1,
+        calindex: -1,
         index: (data.length == 0 ? 1 : data[data.length - 1]['index'] + 1),
         text: textInput.value,
         date: dateInput.value,
