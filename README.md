@@ -21,8 +21,10 @@ The page was implemented using bootstrap and JavaScript. The service is availabl
 
 ## Contributors
 ![sub](img/logo-2.png) 
-<div style="text-align:center;">Gachon University - Department of Software</div>
-<div style="text-align:center;">2023-2 Algorithm (14465_001) Team 1</div>
+Gachon University - Department of Software  
+2023-2 Algorithm (14465_001) Team 1  
+
+
 
 
 - [Park Jeonggeun (r3j0)](https://github.com/r3j0)
