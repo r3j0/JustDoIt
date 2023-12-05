@@ -66,7 +66,7 @@ function createTasks() {
         let isOverdue = taskDate < currentDate;
 
         let priorityColor = 'text-primary';
-        if (Object.keys(data).includes('priority')) {
+        if (Object.keys(x).includes('priority')) {
             switch (x.priority.toLowerCase()) {
                 case 'high':
                     priorityColor = 'text-danger'; // 빨간색
