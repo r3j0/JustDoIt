@@ -6,7 +6,6 @@ function appendTaskBar(cell, year, month, currentDay, mode) {
     let todayDate = String(today.getFullYear()) + "-" + String(today.getMonth() + 1).padStart(2, '0') + "-" + String(today.getDate()).padStart(2, '0');
     let todayTime = today.toTimeString().split(' ')[0].substring(0, 5);
 
-    // 전체 일정에서 날짜가 같으면 가져오기로 했는데, 최적화 여부 고민해봐야 할 것 같습니다. by 박정근
     for (let ti = 0; ti < CalendarData.length; ti++) {
         if (currentDate == CalendarData[ti].date) {
             currentTask.push(CalendarData[ti]);
@@ -49,9 +48,11 @@ function appendTaskBar(cell, year, month, currentDay, mode) {
             // Done or Skip
             if (currentTaskByTime[tb].status == 1) 
                 taskbar.classList.add('taskbar-taskdone');
-            else if (currentTaskByTime[tb].status == 0 && (currentTaskByTime[tb].date < todayDate || currentTaskByTime[tb].deadline < todayDate)) {
+            else if (currentTaskByTime[tb].status == 0 && (currentTaskByTime[tb].date < todayDate || (currentTaskByTime[tb].deadline < todayDate && currentTaskByTime[tb].deadline != ''))) {
                 taskbar.classList.add('taskbar-taskskip');
-                skipTaskAppend(tb, currentTaskByTime);
+                if (currentTaskByTime[tb].deadline >= todayDate) {
+                    skipTaskAppend(tb, currentTaskByTime);
+                }
             }
         }   
         else { 
@@ -368,10 +369,7 @@ function nextMonth() {
 }
 
 // Global Variable
-var monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-];
+var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
 var bgNames = [ "red", "yellow", "green", "greenyellow", "blue", "aqua", "purple" ];
 
 var CalendarData = [];
@@ -502,8 +500,6 @@ function skipTaskAppend(tb, currentTaskByTime) {
     createTasks();
 }
 
-
-
 // 오늘 기준으로 생성하는 것으로 수정했습니다. by 박정근
 let today = new Date();
 var nowYear = today.getFullYear();
@@ -514,314 +510,15 @@ generateCalendar(today.getFullYear(), today.getMonth() + 1);
 
 console.log(CalendarData);
 
-function tmp() {
-    CalendarData =[
-        {
-            "index": 1,
-            "text": "[G] Algorithm",
-            "date": "2023-12-05",
-            "description": "",
-            "type": "Schedule",
-            "color_category": 5,
-            "location": "AI",
-            "startTime": "10:00",
-            "endTime": "10:50"
-        },
-        {
-            "index": 2,
-            "text": "[G] Network",
-            "date": "2023-12-05",
-            "description": "",
-            "type": "Schedule",
-            "color_category": 6,
-            "location": "AI",
-            "startTime": "11:00",
-            "endTime": "11:50"
-        },
-        {
-            "index": 3,
-            "text": "Lunch",
-            "date": "2023-12-05",
-            "description": "",
-            "type": "Schedule",
-            "color_category": 2,
-            "location": "",
-            "startTime": "12:00",
-            "endTime": "12:50"
-        },
-        {
-            "index": 4,
-            "text": "[G] Future Career",
-            "date": "2023-12-05",
-            "description": "",
-            "type": "Schedule",
-            "color_category": 3,
-            "location": "",
-            "startTime": "13:00",
-            "endTime": "14:50"
-        },
-        {
-            "index": 5,
-            "text": "[G] Intelligence",
-            "date": "2023-12-05",
-            "description": "",
-            "type": "Schedule",
-            "color_category": 4,
-            "location": "Cyber",
-            "startTime": "15:00",
-            "endTime": "16:50"
-        },
-        {
-            "index": 6,
-            "text": "Dinner",
-            "date": "2023-12-05",
-            "description": "",
-            "type": "Schedule",
-            "color_category": 2,
-            "location": "",
-            "startTime": "17:00",
-            "endTime": "17:50"
-        },
-        {
-            "index": 7,
-            "text": "[G] Network",
-            "date": "2023-12-06",
-            "description": "",
-            "type": "Schedule",
-            "color_category": 6,
-            "location": "",
-            "startTime": "11:00",
-            "endTime": "12:50"
-        },
-        {
-            "index": 8,
-            "text": "Lunch",
-            "date": "2023-12-06",
-            "description": "",
-            "type": "Schedule",
-            "color_category": 2,
-            "location": "",
-            "startTime": "13:00",
-            "endTime": "13:50"
-        },
-        {
-            "index": 9,
-            "text": "[G] Database",
-            "date": "2023-12-06",
-            "description": "",
-            "type": "Schedule",
-            "color_category": 7,
-            "location": "",
-            "startTime": "16:00",
-            "endTime": "17:50"
-        },
-        {
-            "index": 10,
-            "text": "[G] Algorithm",
-            "date": "2023-12-07",
-            "description": "",
-            "type": "Schedule",
-            "color_category": 5,
-            "location": "",
-            "startTime": "13:00",
-            "endTime": "13:50"
-        },
-        {
-            "index": 11,
-            "text": "[G] Database",
-            "date": "2023-12-07",
-            "description": "",
-            "type": "Schedule",
-            "color_category": 7,
-            "location": "",
-            "startTime": "14:00",
-            "endTime": "15:50"
-        },
-        {
-            "index": 12,
-            "text": "Dinner Meeting",
-            "date": "2023-12-06",
-            "description": "",
-            "type": "Schedule",
-            "color_category": 1,
-            "location": "Restaurant",
-            "startTime": "18:00",
-            "endTime": "19:00"
-        },
-        {
-            "index": 13,
-            "text": "Game with Friend",
-            "date": "2023-12-04",
-            "description": "",
-            "type": "Schedule",
-            "color_category": 1,
-            "location": "",
-            "startTime": "22:30",
-            "endTime": "24:00"
-        },
-        {
-            "index": 14,
-            "text": "Breakfast",
-            "date": "2023-12-05",
-            "description": "",
-            "type": "Schedule",
-            "color_category": 0,
-            "location": "",
-            "startTime": "08:00",
-            "endTime": "10:00"
-        }
-    ];
-    localStorage.setItem("CalendarData", JSON.stringify(CalendarData));
-    generateCalendar(nowYear, nowMonth);
-}
-
-function tmp2() {
-    data = [
-        {
-            "calindex": -1,
-            "index": 1,
-            "text": "Database HW6",
-            "date": "2023-12-12",
-            "description": "",
-            "color_category": "purple",
-            "priority": "medium",
-            "location": "",
-            "executionTime": 360
-        },
-        {
-            "calindex": -1,
-            "index": 3,
-            "text": "Write Report",
-            "date": "2023-12-05",
-            "description": "",
-            "color_category": "aqua",
-            "priority": "medium",
-            "location": "",
-            "executionTime": 120
-        },
-        {
-            "calindex": -1,
-            "index": 4,
-            "text": "Mail",
-            "date": "2023-12-08",
-            "description": "",
-            "color_category": "red",
-            "priority": "low",
-            "location": "",
-            "executionTime": 10
-        },
-        {
-            "calindex": -1,
-            "index": 5,
-            "text": "Submit HW",
-            "date": "2023-12-05",
-            "description": "",
-            "color_category": "red",
-            "priority": "high",
-            "location": "",
-            "executionTime": 30
-        },
-        {
-            "calindex": -1,
-            "index": 6,
-            "text": "HW1",
-            "date": "2023-12-21",
-            "description": "",
-            "color_category": "yellow",
-            "priority": "medium",
-            "location": "",
-            "executionTime": 60
-        },
-        {
-            "calindex": -1,
-            "index": 7,
-            "text": "HW2",
-            "date": "2023-12-27",
-            "description": "",
-            "color_category": "yellow",
-            "priority": "medium",
-            "location": "",
-            "executionTime": 90
-        },
-        {
-            "calindex": -1,
-            "index": 8,
-            "text": "HW3",
-            "date": "2023-12-22",
-            "description": "",
-            "color_category": "yellow",
-            "priority": "medium",
-            "location": "",
-            "executionTime": 60
-        },
-        {
-            "calindex": -1,
-            "index": 9,
-            "text": "Check Deposit",
-            "date": "2023-12-28",
-            "description": "",
-            "color_category": "blue",
-            "priority": "low",
-            "location": "",
-            "executionTime": 15
-        },
-        {
-            "calindex": -1,
-            "index": 10,
-            "text": "Submission Check",
-            "date": "2023-12-05",
-            "description": "",
-            "color_category": "red",
-            "priority": "high",
-            "location": "Cyber",
-            "executionTime": 20
-        },
-        {
-            "calindex": -1,
-            "index": 11,
-            "text": "Buy Water",
-            "date": "2023-12-07",
-            "description": "",
-            "color_category": "blue",
-            "priority": "low",
-            "location": "",
-            "executionTime": 10
-        },
-        {
-            "calindex": -1,
-            "index": 12,
-            "text": "Buy Medicine",
-            "date": "2023-12-08",
-            "description": "",
-            "color_category": "yellow",
-            "priority": "low",
-            "location": "",
-            "executionTime": 10
-        },
-        {
-            "calindex": -1,
-            "index": 13,
-            "text": "Send Gift",
-            "date": "2023-12-09",
-            "description": "",
-            "color_category": "greenyellow",
-            "priority": "high",
-            "location": "",
-            "executionTime": 15
-        },
-        {
-            "calindex": -1,
-            "index": 14,
-            "text": "Network HW2",
-            "date": "2023-12-29",
-            "description": "",
-            "color_category": "greenyellow",
-            "priority": "high",
-            "location": "",
-            "executionTime": 360
-        }
-    ];
-    localStorage.setItem("data", JSON.stringify(data));
-    createTasks();
-
-}
+// [For Debug] 0번 키를 누르면 모든 일정이 삭제됩니다.
+/* window.addEventListener("keydown", e => {
+    let n = Number(e.key);
+    if (n == 0) {
+        data = []
+        CalendarData = []
+        localStorage.setItem("data", JSON.stringify(data));
+        localStorage.setItem("CalendarData", JSON.stringify(CalendarData));
+        createTasks();
+        generateCalendar(nowYear, nowMonth);
+    }
+}); */

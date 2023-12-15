@@ -1,16 +1,3 @@
-// 1. 현재 시간 기준, 이후 시간 타임에서 '여유 시간' 구하기
-// [10:30 ~ 18:30], [19:00 ~ 21:00]
-// 2. 
-// 동일 수행 시간 -> 냅색
-// 데드라인, 우선순위 -> 그리디
-
-// 데드라인 그룹화 -> 우선 데드라인부터 그리디 진행
-// 우선순위가 같으면 냅색 진행
-
-// todolist Task Key -> calendar Task Key
-
-// [TODO] 주석 제대로 짜기, 한 번 더 검토
-
 function nextDate(now) {
     const nowDate = new Date(now);
     nowDate.setDate(nowDate.getDate() + 1);
@@ -192,10 +179,7 @@ function assignTasks() {
 
                 availableTime[at]['start'] = tmpEndTime;
                 taskGroup[tg].splice(assignTasksByIdx[atk] - 1, 1);
-
-                // [TODO] task 들을 실제로 지우기 위해 배열에다가 append
             }
-
         }
     }
     
@@ -214,9 +198,6 @@ function assignTasks() {
             if (weightRange <= 0) break;
             if (taskGroup[tg].length == 0) continue;
             let dp = create2DArray(taskGroup[tg].length + 1, weightRange+1);
-
-            //console.log(JSON.parse(JSON.stringify(availableTime[at])));
-            //console.log(JSON.parse(JSON.stringify(taskGroup[tg])));
             
             // Knapsack
             for (let j = 1; j <= weightRange; j++) {
@@ -250,9 +231,6 @@ function assignTasks() {
             });
 
             for (let atk = 0; atk < assignTasksByIdx.length; atk++) {
-                // console.log(JSON.parse(JSON.stringify(taskGroup[tg][assignTasksByIdx[atk] - 1])));
-                // console.log(availableTime[at]['start']);
-                
                 let tmpEndTime = nextMinuteValue(dateRemainTask, dateRemainTaskStartTime, taskGroup[tg][assignTasksByIdx[atk] - 1]['executionTime']);
                 if (tmpEndTime == '00:00') tmpEndTime = '24:00';
 
@@ -270,7 +248,6 @@ function assignTasks() {
                                     'runningTime': taskGroup[tg][assignTasksByIdx[atk] - 1]['executionTime'],
                                     'startTime': dateRemainTaskStartTime,
                                     'endTime': tmpEndTime});
-                                    
 
                 dateRemainTaskStartTime = tmpEndTime;
                 taskGroup[tg].splice(assignTasksByIdx[atk] - 1, 1);

@@ -51,6 +51,7 @@ let acceptData = () => {
         location: document.getElementById('locationInput').value,
         executionTime: hours * 60 + minutes,
     });
+    editTaskDelete();
 
     localStorage.setItem("data", JSON.stringify(data));
 
@@ -148,22 +149,8 @@ let editTask = (e) => {
     document.getElementById('executionTimeMinutesInput').value = selectedTask.executionTime % 60;
 };
 
-
-
 // batch 버튼 누르면 데이터 보내는 함수
 function sendBatchData() {
-    //console.log('Batch button clicked'); // 함수 호출 테스트용
-
-    let taskData = data.map(task => ({
-        text: task.text,
-        date: task.date,
-        description: task.description,
-        priority: task.priority,
-        location: task.location,
-        executionTime: task.executionTime,
-    }));
-    console.log(taskData);
-
     if (data.length == 0) alert("There is nothing to batch.");
     else assignTasks();
 }
@@ -172,10 +159,13 @@ var selDataIdx = -1;
 batchButton.addEventListener('click', sendBatchData);
 
 let resetForm = () => {
+    selDataIdx = -1;
     textInput.value = "";
     dateInput.value = "";
     textarea.value = "";
     locationInput.value = "";
+    document.getElementById('executionTimeHoursInput').value = "";
+    document.getElementById('executionTimeMinutesInput').value = "";
 };
 
 (() => {
