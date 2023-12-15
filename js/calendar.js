@@ -402,7 +402,8 @@ let formValidationCal = () => {
         startTimeHoursInput.value === "" || 
         startTimeMinutesInput.value === "" || 
         endTimeHoursInput.value === "" || 
-        endTimeMinutesInput.value === "") {
+        endTimeMinutesInput.value === "" ||
+        (Number(startTimeHoursInput.value) * 60 + Number(startTimeMinutesInput.value)) > (Number(endTimeHoursInput.value) * 60 + Number(endTimeMinutesInput.value))) {
         console.log("failure");
     } else {
         console.log("success");
